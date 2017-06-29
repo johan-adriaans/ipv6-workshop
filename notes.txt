@@ -1,0 +1,41 @@
+Sources:
+  https://keepingitclassless.net/2011/10/neighbor-solicitation-ipv6s-replacement-for-arp/
+  https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml
+  https://www.jumpingbean.co.za/blogs/mark/set-up-ipv6-lan-with-linux
+  https://chronos-tachyon.net/reference/debian-ipv6-and-hurricane-electric/
+  https://serverfault.com/questions/349950/ipv6-without-nat-but-what-about-an-isp-change
+  https://en.wikipedia.org/wiki/Teredo_tunneling
+  https://serverfault.com/questions/349950/ipv6-without-nat-but-what-about-an-isp-change
+  https://howdoesinternetwork.com/2013/slaac
+  http://sophiedogg.com/radvd-and-dhcpd6-server-configuration-for-dynamic-dns/
+  http://www.openwall.com/presentations/IPv6/img35.html
+  https://www.tutorialspoint.com/ipv6/ipv6_quick_guide.htm
+  https://github.com/hakimel/reveal.js/
+
+Wat hebben we nodig!
+
+- Hardware (Raspberry pi, laptop, etc)
+- Verbinding met het internet
+- Tunnel account (he.net)
+- (wanneer achter NAT) Een statisch intern adres
+- OS dat ipv6 ondersteunt (alle)
+
+# IPv6 internet
+- Statisch LAN ip aan de gang krijgen
+- Ipv6 Firewall! Je device (en later alle achterliggende devices) krijgt een direct internet ip. (ip6tables)
+- Vergeet iptables niet persistent te maken
+- Tunnel configuren
+- ping6 google.com%iface
+
+# IPv6 Router
+- We gaan voor SLAAC - automatische ip toewijzing en router advertising server (radvd)
+- Enable ipv6 forwarding /proc/sys/net/ipv6/conf/all/forwarding (/etc/sysctl.conf)
+- Static ipv6 address 2001::dead:beef:beea::1 op lan interface
+- radvd -c
+
+# raspberry pi
+- Wachtwoord aanpassen
+- Systeemupdate
+- Hebben we ipv6? ping6 ::1 + ping6 ff02::1%iface
+- beware of dadfailure!
+

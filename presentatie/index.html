@@ -1,0 +1,578 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>IPv6 Workshop</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+    <style>
+      .reveal pre { width:60%; box-shadow: none; }
+    </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+        <section>
+          <h1>IPv6 Workshop</h1>
+          <br />
+          <h3>WIFI</h3>
+          <p>
+            SSID: BEEA<br />
+            PSK: laatstedonderdagvandemaand
+          <p>
+          <br />
+          <small>Johan Adriaans - johan@driaans.nl</small>
+          </p>
+        </section>
+
+        <section>
+          <section>
+            <h1>Intro verhaaltje</h1>
+          </section>
+          <section>
+            <h1>Waarom geen IPv5?</h1>
+            <p class="fragment fade-up">IPv1-3 zijn dev-versies van IPv4</p>
+            <p class="fragment fade-up">IPv5 is het Internet Stream Protocol</p>
+            <p class="fragment fade-up">Nooit publiek gebruikt, wel vastgelegd.</p>
+            <p class="fragment fade-up">Dus.. IPv6</p>
+            <br />
+            <pre class="fragment fade-up" style="width:50%">
+   Decimal Keyword Version                     Reference
+
+     0-1           Reserved                    [Jon_Postel][RFC4928]
+     2-3           Unassigned                  [Jon_Postel]
+      4    IP      Internet Protocol           [RFC791][Jon_Postel]
+      5    ST      ST Datagram Mode            [RFC1819][Jim_Forgie]
+      6    IPv6    Internet Protocol version 6 [RFC-ietf-6man-rfc2460bis-13]
+      7    TP/IX   TP/IX: The Next Internet    [RFC6814]
+      8    PIP     The P Internet Protocol     [RFC1621]
+      9    TUBA    TUBA                        [RFC1347]
+    10-14          Unassigned                  [Jon_Postel]
+     15            Reserved                    [Jon_Postel]
+            </pre>
+          </section>
+          <section>
+            <h1>Waarom dan wel IPv6?</h1>
+            <p class="fragment fade-up">31 januari 2011 Top-level exhaustion</p>
+            <p class="fragment fade-up">15 april 2011 Asia-Pacifica op! (APNIC)</p>
+            <p class="fragment fade-up">14 september 2012 Europe ook alles op! (RIPE NCC)</p>
+            <p class="fragment fade-up">10 juni 2014 Latin America/Caribbean leeg (LACNIC)</p>
+            <p class="fragment fade-up">24 september 2015 North America ook leeg (ARIN)</p>
+            <p class="fragment fade-up">Africa kan nog even door \o/ (AFRINIC)</p>
+          </section>
+          <section>
+            <h1>Maar ook!</h1>
+            <p class="fragment fade-up">Larger Address Space</p>
+            <p class="fragment fade-up">Simplified Header</p>
+            <p class="fragment fade-up">End-to-end Connectivity (NAT b-gone)</p>
+            <p class="fragment fade-up">Auto-configuration</p>
+            <p class="fragment fade-up">Faster Forwarding/Routing</p>
+            <p class="fragment fade-up">No Broadcast</p>
+            <p class="fragment fade-up">Anycast Support</p>
+            <p class="fragment fade-up">Mobility</p>
+            <p class="fragment fade-up">Extensibility</p>
+          </section>
+        </section>
+
+        <section>
+          <img src="img/osi.gif" alt="osi" />
+        </section>
+
+        <section>
+          <section>
+            <h1>Check je adres</h1>
+            <ul>
+              <li>ifconfig</li>
+              <li>ip addr show</li>
+              <li>ipconfig</li>
+              <li>netstat -in</li>
+            </ul>
+          </section>
+
+          <section>
+            <h1>Hey kijk! FE80::/10</h1>
+            <h4>fe80::20c:29ff:fe42:4dd5</h4>
+            <ul>
+              <li>Dit is je link-local adres</li>
+              <li>Begint altijd met FE80 met een prefix-length van 10</li>
+              <li>Deze adressen worden niet gerouteerd</li>
+              <li>Hiermee wordt alle autoconfiguratie gedaan</li>
+              <li>MAC adres van IPv6 *ducks*</li>
+              <li>Random of op basis van het MAC adres</li>
+            </ul>
+          </section>
+
+          <section>
+            <h1>Neighborhood</h1>
+            <p>Gluren bij de buren</p>
+            <ul>
+              <li>ip -6 neighbor show</li>
+              <li>ndp -a</li>
+              <li>netsh interface ipv6 show neighbors</li>
+            </ul>
+          </section>
+
+          <section>
+            <h1>IPv6 adressen</h1>
+            <ul>
+              <li>128 bits</li>
+              <li>8 groepen van 16 bits</li>
+              <li>4 bits per hexadimaal getal (0-15)</li>
+            </ul>
+            <pre style="text-align: center;">
+
+   |                           128 bits                              |
+   +-----------------------------------------------------------------+
+   |                          node address                           |
+   +-----------------------------------------------------------------+
+
+            </pre>
+          </section>
+
+          <section>
+            <h1>Adresnotatie</h1>
+            <h4>fe80:0000:0000:0000:020c:29ff:fe42:4dd5</h4>
+            <p class="fragment fade-up">010.000.000.001</p>
+            <p class="fragment fade-up">10.0.0.1</p>
+            <p class="fragment fade-up">fe80:0:0:0:20c:29ff:fe42:4dd5</p>
+            <p class="fragment fade-up">fe80::20c:29ff:fe42:4dd5</p>
+            <p class="fragment fade-up">fd00:beea::1</p>
+          </section>
+
+          <section>
+            <h1>Address types</h1>
+            <ul>
+              <li>Adressen</li>
+              <ul>
+                <li>Link-Local - FE80::/10</li>
+                <li>Global Unicast Address (GUA) - 2000::/3</li>
+                <li>Unique Local Address (ULA) - FC00::/7 </li>
+              </ul>
+              <li>Addressing / Routing</li>
+              <ul>
+                <li>Unicast - 1 to 1</li>
+                <li>Multicast - 1 to many</li>
+                <li>Anycast - many to few</li>
+              </ul>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Inkorten</h3>
+            <ul>
+              <li>Verwijder voorgaande nullen</li>
+              <li>Meerdere opvolgende nul-blokken samenvoegen tot 1 ::</li>
+            </ul>
+            <p><br /></p>
+            <h3 class="fragment fade-up">Oefening</h3>
+            <ul>
+              <li class="fragment fade-up">1001 : 2000 : 0003 : 0400 : 0000 : 0000 : 7777 : 0800</li>
+              <li class="fragment fade-up" style="color:#22ff22;">1001 : 2000 : 3 : 400 :: 7777 : 800</li>
+              <li class="fragment fade-up">1001 : 0000 : 0000 : 0400 : 0000 : 0000 : 7777 : 0800</li>
+              <li class="fragment fade-up" style="color:#dd2222;">1001 :: 400 :: 7777 : 800</li>
+              <li class="fragment fade-up" style="color:#22ff22;">1001 :: 400 : 0 : 0 : 7777 : 800</li>
+            </ul>
+          </section>
+
+          <section>
+            <h1>Spoedcursus talstelsels</h1>
+          </section>
+
+          <section>
+            <h1>::0/???</h1>
+            <h3>Prefix-length</h3>
+            <ul>
+              <li>FE80::/10</li>
+              <li>FC00::/7</li>
+              <li>2000::/3</li>
+              <li>::/127</li>
+            </ul>
+            <br />
+            <br />
+            <pre style="text-align:center">
+  F     E     8     0 
+1111  1110  1000  0000
+xxxx  xxxx  xx--  ----
+
+  F     C     0     0 
+1111  1100  0000  0000
+xxxx  xxxx  x---  ----
+              </pre>
+          </section>
+
+          <section>
+            <h1>Link-local address</h1>
+            <h4>fe80:0000:0000:0000:020c:29ff:fe42:4dd5</h4>
+            <pre style="text-align: center;">
+
+   |   10     |                         |                            |
+   |  bits    |         54 bits         |          64 bits           |
+   +----------+-------------------------+----------------------------+
+   |1111111010|           0             |       interface ID         |
+   +----------+-------------------------+----------------------------+
+   |   FE80   |           ::            |     20c:29ff:fe42:4dd5     |
+                                        |         ~ ff:fe ~          |
+
+            </pre>
+            <ul>
+              <li>Interface ID = Modified EUI-64 Format</li>
+              <li>Dit is gebaseerd op het MAC adres</li>
+              <li>Kan gevoelig zijn, wordt vaak random gemaakt</li>
+              <li>Zie RFC 4941 voor uitleg</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Modified EUI-64 Format</h3>
+            <img src="img/eui64.png" alt="EUI-64" />
+            <h3 class="fragment fade-up">Oefening</h3>
+            <p class="fragment fade-up">Maak van de volgende MAC adressen Link-local adressen</p>
+            <ul>
+              <li class="fragment fade-up">d4 : 3d : 7e : 25 : f1 : 19</li>
+              <li class="fragment fade-up" style="color:#22ff22;">fe80 :: d63d : 7eff : fe25 : f119</li>
+              <li class="fragment fade-up">08 : 9e : 08 : 49 : dd : c5</li>
+              <li class="fragment fade-up" style="color:#22ff22;">fe80 :: a9e : 08ff : fe49 : ddc5</li>
+            </ul>
+            <p><small>bit 7 moet naar 1</small></p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Multicast adressen</h1>
+            <pre style="text-align: center;">
+
+   |   8    |  4 |  4 |                  112 bits                   |
+   +------ -+----+----+---------------------------------------------+
+   |11111111|flgs|scop|                  group ID                   |
+   +--------+----+----+---------------------------------------------+
+
+            </pre>
+            <ul>
+              <li>FF00::/8</li>
+              <li>Flags (en Multicast) worden uitgelegd in RFC4291</li>
+              <li>Scope</li>
+              <ul>
+                <li>1: Interface-Local scope</li>
+                <li>2: Link-Local scope</li>
+                <li>4: Admin-Local scope</li>
+                <li>5: Site-Local scope</li>
+                <li>8: Organization-Local scope</li>
+                <li>E: Global scope</li>
+                </li>
+              </ul>
+              <li>Vastgelegde Group IDs</li>
+              <ul>
+                <li>1: All nodes</li>
+                <li>2: All routers</li>
+              </ul>
+            </ul>
+          </section>
+
+          <section>
+            <h3>ping6 ff02::1</h3>
+            <p class="fragment fade-up">Oh jee.. Connect: invalid argument, No route to host</p>
+            <ul class="fragment fade-up">
+              <li>Controleer je route tabel</li>
+              <ul>
+                <li>netsat -rn</li>
+                <li>route -n</li>
+                <li>ip route show</li>
+                <li>route print</li>
+              </ul>
+            </ul>
+            <p class="fragment fade-up">Iedere interface heeft een route naar ff02::/32 en fe80::/64</p>
+            <p class="fragment fade-up">De route is ambigue, de uitgaande interface moet worden aangegeven</p>
+            <p class="fragment fade-up">ping6 -I eth0 ff02::1</p>
+            <p class="fragment fade-up">ping6 ff02::1%eth0</p>
+          </section>
+
+          <section>
+            <h3>Multicast groups</h3>
+            <p>Waarom luistert mijn systeem naar die multicast ping?</p>
+            <div class="fragment fade-up">
+              <ul>
+                <li>Controlleer je group memberships</li>
+                <ul>
+                  <li>netstat -g</li>
+                  <li>ip maddr</li>
+                  <li>netsh interface ip show joins</li>
+                  <ul class="fragment fade-up">
+                    <li>IPv6</li>
+                    <ul>
+                      <li>ff02::1</li>
+                      <li>ff02::1:ff42:4dd5</li>
+                    </ul>
+                    <li>MAC / Hardware</li>
+                    <ul>
+                      <li>33:33:00:00:00:01</li>
+                      <li>33:33:ff:42:4d:d5</li>
+                    </ul>
+                  </ul>
+                </ul>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h3>DAD</h3>
+            <p><small>Duplicate Address Detection</small></p>
+            <ul>
+              <li>Node wil ip adres FE80::1000:2000:3333:4000</li>
+              <li>Node wordt lid van multicast groepen:
+              <ul>
+                <li>FF02::1</li>
+                <li>FF02::1:FF33:4000</li>
+              </ul>
+              <li>Node stuurt Neighbor Sollicitation naar FF02::1:FF33:4000 vanaf ::</li>
+              <li>Luistert op FF02::1 of er een Neighbor Advertisement langs komt</li>
+              <li>Zo niet, dan is het adres vrij</li>
+              <li>NA en NS pakketten worden ook periodiek verstuurd om te controleren of adressen nog geldig zijn.</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h1>Start Wireshark</h1>
+          <p>Luister naar wifi interfact met filter: ip6</p>
+          <p>Kijk wat je langs ziet komen</p>
+        </section>
+
+        <section>
+          <section>
+            <h1>Teredo Tunnel</h1>
+            <p>Kans op een IPv6 verbinding thuis is in Nederland ongeveer 10%</p>
+            <p>Teredo tunnels zijn een tijdelijke oplossing</p>
+            <p>Alle teredo tunnel adressen beginnen met 2001::/32</p>
+            <p>IPv4 tunnel over internet naar een IPv6 endpoint</p>
+            <p>Password! Firewall! Persistant!</p>
+            <p>Tunnel door ipv4 naar ipv6 endpoint</p>
+            <p>Tunnelbroker.net</p>
+          </section>
+
+          <section>
+            <h3>Prepare the pi</h3>
+            <ul>
+              <li>Raspbian Lite Jessie op de SD-card</li>
+              <li>SSH openzetten</li>
+              <li>Wachtoord van de pi user aanpassen</li>
+              <li>Keyboard layout naar US zetten</li>
+              <li>vim installeren :)</li>
+              <li>Met draad aan de router</li>
+              <li>Zoeken op het netwerk, met ipv6 natuurlijk</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Pi een statisch ipv4 geven</h3>
+            <ul>
+              <li>Dit is nodig voor de tunnel</li>
+              <li>Bekijk je neigbourhood en vind een MAC adres dat begint met b8:27:be</li>
+            </ul>
+            <pre>
+
+auto eth0
+iface eth0 inet static
+    address 192.168.1.2
+    netmask 24
+    gateway 192.168.1.1
+
+            </pre>
+          </section>
+
+          <section>
+            <h3>Eerst maar even een firewall</h3>
+            <ul>
+              <li>firewall script uploaden</li>
+              <li>net.ipv6.conf.all.forwarding=1 in /etc/sysctl.conf</li>
+              <li>systcl -p</li>
+              <li>sh firewall.sh</li>
+              <li>apt install iptables-persistent</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Tunnel</h3>
+            <ul>
+              <li>Account aanmaken op tunnelbroker.net</li>
+              <li>De configuratie van tunnelbroker.net overnemen</li>
+              <li>Let op dat je bij local het statische ip invoert (wanneer je achter een NAT zit)</li>
+              <li>Het &lt;global-prefix&gt;::1 adres toevoegen aan etho</li>
+            </ul>
+            <pre>
+
+iface eth0 inet6 static
+  address 2001:470:1f15:a3::1
+  netmask 64
+
+auto he-ipv6
+iface he-ipv6 inet6 v4tunnel
+        address 2001:470:1f14:a3::2
+        netmask 64
+        endpoint 216.66.84.46
+        local 192.168.1.2
+        ttl 255
+        gateway 2001:470:1f14:a3::1
+
+            </pre>
+          </section>
+
+          <section>
+            <h3>IPv6 internet! En nu SLAAC</h3>
+            <ul>
+              <li>SLAAC = Stateless Address Auto Configuration</li>
+              <li>Net als Neighbor Sollicitation en Advertisement is er<br />ook Router Sollicitation en Advertisement.</li>
+              <li>Een IPv6 netwerk kan zichzelf zonder DHCP server configureren. Dit heet dus SLAAC</li>
+              <li>Hiervoor is een Router Advertisement Daemon nodig</li>
+              <li>radvd installeren</li>
+            </ul>
+            <pre>
+
+vi /etc/radvd.conf
+interface eth0
+{
+    AdvSendAdvert on;
+    AdvManagedFlag on;
+    prefix 2001:470:1f15:a3::/64
+    {
+        AdvOnLink on;
+        AdvAutonomous on;
+    };
+    RDNSS 2001:4860:4860::8888 2001:4860:4860::8844 {
+    };
+};
+            </pre>
+          </section>
+
+          <section>
+            <h3>Doen</h3>
+            <ul>
+              <li>Test de internet verbinding, ipv6 test sites genoeg</li>
+              <li>Probeer jezelf vanaf internet te pingen</li>
+              <li>Probeer een verbinding naar jezelf te maken</li>
+              <li>Probeer het opnieuw, maar nu met de poort open in de firewall</li>
+              <li>Sta even stil bij het feit dat er geen NAT wordt gebruikt</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>ULA</h1>
+            <p>Unique Local Address</p>
+            <p>Prefix: FC00/7<p>
+            <p>Wordt niet gerouteerd</p>
+            <p>Bit 8 = local bit en moet dus altijd op 1</p>
+            <p>Dus FD00/7</p>
+            <pre style="text-align:center">
+
+    | 7 bits |1|  40 bits   |  16 bits  |          64 bits           |
+    +--------+-+------------+-----------+----------------------------+
+    | Prefix |L| Global ID  | Subnet ID |        Interface ID        |
+    +--------+-+------------+-----------+----------------------------+
+
+            </pre>
+          </section>
+          <section>
+            <h3>DHCP6</h3>
+            <ul>
+              <li>isc-dhcp-server installeren</li>
+              <li>OPTIONS="-6" in /etc/default/isc-dhcp-server</li>
+              <li>touch /var/lib/dhcp/dhcpd6.leases</li>
+            </ul>
+            <pre style="width:40%;">
+
+# /etc/dhcp/dhcpd.conf
+ddns-update-style none;
+default-lease-time 600;
+max-lease-time 7200;
+
+subnet6 fd00:beea::/64 {
+    range6 fd00:beea::10 fd00:beea::ff;
+    option dhcp6.name-servers 2001:4860:4860::8888, 2001:4860:4860::8844;
+}
+
+            </pre>
+          </section>
+          <section>
+            <h3>De rest laten samenwerken met dhcp</h3>
+            <ul>
+              <li>Static fd00:beea::1 toevoegen</li>
+              <li>Via radvd vertellen dat er een dhcp server is voor range fd00:beea::/64</li>
+            </ul>
+            <pre>
+
+# /etc/network/interfaces
+iface eth0 inet6 static
+  address fd00:beea::1
+  netmask 64
+
+# /etc/radvd.conf
+interface eth0
+{
+    AdvManagedFlag on;
+    AdvSendAdvert on;
+    prefix 2001:470:1f15:a3::/64
+    {
+        AdvOnLink on;
+        AdvAutonomous on;
+    };
+    RDNSS 2001:4860:4860::8888 2001:4860:4860::8844 {
+    };
+    prefix fd00:beea::/64
+    {
+        AdvAutonomous off;
+    };
+};
+
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <h1>DONE!</h1>
+          <p>Veel!</p>
+          <p>Klaar!</p>
+          <p>Biear!</p>
+        </section>
+
+      </div>
+    </div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+        defaultTiming: 3600,
+        width: 1920,
+        height: 1080,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
