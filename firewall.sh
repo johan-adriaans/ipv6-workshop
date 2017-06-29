@@ -1,5 +1,6 @@
-# Filename : ipv6tables.rules.sh
 # Created by W. Dickson 18.12.12
+# Adjustments by Johan Adriaans 28.06.17
+
 # First, delete all firewall rules.
 ip6tables -F
 ip6tables -X
@@ -7,18 +8,18 @@ ip6tables -t mangle -F
 ip6tables -t mangle -X
 
 # Allow anything on the local link
-ip6tables -A INPUT  -i lo -j ACCEPT
+ip6tables -A INPUT -i lo -j ACCEPT
 ip6tables -A OUTPUT -o lo -j ACCEPT
 
 # Allow anything out onto internet
 ip6tables -A OUTPUT -o he-ipv6 -j ACCEPT
 # Allow established, related packets back in
-ip6tables -A INPUT  -i he-ipv6 -m state --state ESTABLISHED,RELATED -j ACCEPT
+ip6tables -A INPUT -i he-ipv6 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow the localnet to access us:
-ip6tables -A INPUT    -i eth0   -j ACCEPT
+ip6tables -A INPUT  -i eth0   -j ACCEPT
 ip6tables -A FORWARD -i eth0 -o eth0 -j ACCEPT
-ip6tables -A OUTPUT   -o eth0   -j ACCEPT
+ip6tables -A OUTPUT -o eth0   -j ACCEPT
 
 # Filter all packets that have RH0 headers:
 ip6tables -A INPUT -m rt --rt-type 0 -j DROP
@@ -38,7 +39,7 @@ ip6tables -A INPUT -d ff00::/8 -j ACCEPT
 ip6tables -A OUTPUT -d ff00::/8 -j ACCEPT
 
 # Allow ICMPv6 everywhere
-ip6tables -I INPUT  -p icmpv6 -j ACCEPT
+ip6tables -I INPUT -p icmpv6 -j ACCEPT
 ip6tables -I FORWARD -p icmpv6 -j ACCEPT
 ip6tables -I OUTPUT -p icmpv6 -j ACCEPT
 
@@ -59,7 +60,6 @@ ip6tables -A FORWARD -p ipv6-nonxt -m length --length 40 -j ACCEPT
 # ip6tables -A FORWARD -i he-ipv6 -p tcp -d [Your IPv6 Webserver Address]/128 --dport 80 -j ACCEPT
 
 ## LOGGING
-
 ip6tables -A INPUT -m limit --limit 10/m --limit-burst 7 -j LOG --log-prefix '[FW INPUT]: '
 ip6tables -A FORWARD -m limit --limit 10/m --limit-burst 7 -j LOG --log-prefix '[FW FORWARD]: '
 ip6tables -A OUTPUT -m limit --limit 10/m --limit-burst 7 -j LOG --log-prefix '[FW OUTPUT]: '
